@@ -70,7 +70,7 @@ class App extends Component {
               </Marker> : ""
           }
         </Map>
-        <Card body>
+        <Card body className = "message-form">
           <CardTitle>Special Title Treatment</CardTitle>
           <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
           <Button>Go somewhere</Button>
