@@ -13,7 +13,12 @@ body {
 }
 
 .message-form{
-  position: absolute;
-  top : 0;
-  right: 0;
+    z-index: 999; /* need to give such high number may be because maps setting */
+    position: absolute;
+    top : 0;
+    right: 0;
+}
+
+video {
+  width : 100%;
 }
