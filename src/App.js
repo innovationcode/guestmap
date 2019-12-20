@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Map, TileLayer, Marker, Popup} from 'react-leaflet';
-import L, { divIcon } from 'leaflet';
-import { Form, FormGroup, Input, Card, Button, CardTitle, CardText, Row, Col, Label } from 'reactstrap';
+import L from 'leaflet';
+import { Form, FormGroup, Input, Card, Button, CardTitle, CardText, Label } from 'reactstrap';
 import Joi from '@hapi/joi';
 
 import './App.css';
@@ -45,9 +45,32 @@ class App extends Component {
     },
     sendingMessage : false,
     sentMessage: false,
+    messages: [],
   }
 
   componentDidMount() {
+    fetch(API_URL)
+        .then(res => res.json())
+        .then(messages => {
+            console.log("messages ****** : ", messages)
+            const haveSeenLocation = {}
+            messages = messages.reduce((all, message) => {
+                const key = `${message.latitude}.toFixed(3)${message.longitude}.toFixed(2)`;
+                if(haveSeenLocation[key]) {
+                    haveSeenLocation[key].otherMessages = haveSeenLocation[key].otherMessages || [];
+                    
+                    haveSeenLocation[key].otherMessages.push(message);
+                } else {
+                    haveSeenLocation[key] = message;
+                    all.push(message);
+                }
+                return all;
+            }, []);
+            this.setState({
+                messages,
+            })
+        })
+
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({
         location : {
@@ -145,6 +168,16 @@ class App extends Component {
                 </Popup>
               </Marker> : ""
           }
+          {this.state.messages.map((message) => 
+              <Marker 
+                  key = {message._id}
+                  position={[message.latitude, message.longitude]}
+                  icon = {myIcon}>
+                  <Popup>
+                    <p> <em>{message.name} :</em> {message.message} </p> {message.otherMessages ? message.otherMessages.map(message => <p key = {message._id}>  <em>{message.name} :</em> {message.message} </p>) : ''}  
+                  </Popup>
+              </Marker>  
+          )}
         </Map>
         <Card body className = "message-form">
           <CardTitle>Welcome to GuestMap!</CardTitle>
