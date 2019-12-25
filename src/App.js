@@ -29,7 +29,7 @@ const schema = Joi.object({
               .required(),
 });
 
-const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:5000/api/v1/messages' : 'production_url';
+const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:5000/api/v1/messages' : 'https://guestmap-server.herokuapp.com/api/v1/messages';
 
 class App extends Component {
   state = {
@@ -55,7 +55,7 @@ class App extends Component {
             console.log("messages ****** : ", messages)
             const haveSeenLocation = {}
             messages = messages.reduce((all, message) => {
-                const key = `${message.latitude}.toFixed(3)${message.longitude}.toFixed(2)`;
+                const key = `${message.latitude}.toFixed(3)${message.longitude}.toFixed(3)`;
                 if(haveSeenLocation[key]) {
                     haveSeenLocation[key].otherMessages = haveSeenLocation[key].otherMessages || [];
                     
